@@ -1,15 +1,15 @@
-from distutils.core import setup
+from setuptools import setup, find_packages
 
 
 setup(
     name = 'glx',
-    packages = ['glx'],
-    version = '0.2',
+    packages=find_packages(),
+    version = '0.3',
     description = 'Classes that facilitate working with OpenGL 4.4 shaders and efficiently rendering text.',
     author = 'Neil Girdhar',
     author_email = 'mistersheik@gmail.com',
     url = 'https://github.com/NeilGirdhar/glx',
-    download_url = 'https://github.com/neilgirdhar/glx/archive/0.2.tar.gz',
+    download_url = 'https://github.com/neilgirdhar/glx/archive/0.3.tar.gz',
     keywords = [],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
