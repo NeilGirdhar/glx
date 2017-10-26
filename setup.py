@@ -4,12 +4,12 @@ from distutils.core import setup
 setup(
     name = 'glx',
     packages = ['glx'],
-    version = '0.1',
+    version = '0.2',
     description = 'Classes that facilitate working with OpenGL 4.4 shaders and efficiently rendering text.',
     author = 'Neil Girdhar',
     author_email = 'mistersheik@gmail.com',
     url = 'https://github.com/NeilGirdhar/glx',
-    download_url = 'https://github.com/neilgirdhar/glx/archive/0.1.tar.gz',
+    download_url = 'https://github.com/neilgirdhar/glx/archive/0.2.tar.gz',
     keywords = [],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
