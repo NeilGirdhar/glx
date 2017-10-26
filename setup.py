@@ -25,7 +25,7 @@ setup(
     install_requires = ['numpy>=1.13',
                         'mako>=1.0.7',
                         'rectangle>=0.2',
-                        'freetype>=1.1',
+                        'freetype-py>=1.1',
                         'PyOpenGL>=3.0.0'],
     python_requires='>=3.4'
 )
