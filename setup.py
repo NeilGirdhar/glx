@@ -1,15 +1,20 @@
+import os
 from setuptools import setup, find_packages
 
+data_files = [(dirpath, [os.path.join(dirpath, filename)
+                         for filename in filenames])
+              for dirpath, dirnames, filenames in os.walk('glx/glsl_shaders')]
 
 setup(
     name = 'glx',
     packages=find_packages(),
-    version = '0.3',
+    data_files=data_files,
+    version = '0.3.1',
     description = 'Classes that facilitate working with OpenGL 4.4 shaders and efficiently rendering text.',
     author = 'Neil Girdhar',
     author_email = 'mistersheik@gmail.com',
     url = 'https://github.com/NeilGirdhar/glx',
-    download_url = 'https://github.com/neilgirdhar/glx/archive/0.3.tar.gz',
+    download_url = 'https://github.com/neilgirdhar/glx/archive/0.3.1.tar.gz',
     keywords = [],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
