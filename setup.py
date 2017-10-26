@@ -5,14 +5,14 @@ setup(
     name = 'glx',
     packages=find_packages(),
     package_data={
-        'glx/glsl_shaders': ['*.vert', '*.frag', '*.geom'],
+        'glx': ['*.vert', '*.frag', '*.geom'],
     },
-    version = '0.3.2',
+    version = '0.3.3',
     description = 'Classes that facilitate working with OpenGL 4.4 shaders and efficiently rendering text.',
     author = 'Neil Girdhar',
     author_email = 'mistersheik@gmail.com',
     url = 'https://github.com/NeilGirdhar/glx',
-    download_url = 'https://github.com/neilgirdhar/glx/archive/0.3.2.tar.gz',
+    download_url = 'https://github.com/neilgirdhar/glx/archive/0.3.3.tar.gz',
     keywords = [],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
