@@ -1,9 +1,8 @@
 import numpy as np
-
-from glx import gl
+from pkg_resources import resource_filename
 
 from ..shader_program import Attribute, BufferDescription, ShaderProgram
-from pkg_resources import resource_filename
+from .gl_importer import gl
 
 __all__ = ['BasicShaderProgram']
 
@@ -16,8 +15,9 @@ class BasicShaderProgram(ShaderProgram):
     """
 
     def __init__(self, uniforms={}):
-        super().__init__(vertex=['glx/glsl_shaders/basic'],
-                         fragment=['glx/glsl_shaders/basic'])
+        super().__init__(
+            vertex=[resource_filename('glx', 'glsl_shaders/basic.vert')],
+            fragment=[resource_filename('glx', 'glsl_shaders/basic.frag')])
 
         with self.bind_context(uniforms):
             # Create one buffer.

@@ -3,8 +3,7 @@ from itertools import count
 
 import numpy as np
 
-from glx import gl as gl
-from glx import OpenGL
+from ..gl_importer import OpenGL, gl
 
 __all__ = []
 

@@ -1,8 +1,7 @@
 import freetype as ft
 import numpy as np
 
-from glx import gl as gl
-
+from ..gl_importer import gl as gl
 from ..shader_program import Attribute, BufferDescription
 
 

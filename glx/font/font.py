@@ -3,6 +3,7 @@ from contextlib import contextmanager
 
 import freetype as ft
 import numpy as np
+from pkg_resources import resource_filename
 
 from ..shader_program import ShaderProgram
 from .atlas import Atlas
@@ -25,9 +26,10 @@ class Font:
         Create all textures for latin characters and store them on the card.
         Set uniforms for the textures.
         """
-        self.shader_program = ShaderProgram(vertex=['glx/glsl_shaders/text'],
-                                            geometry=['glx/glsl_shaders/text'],
-                                            fragment=['glx/glsl_shaders/text'])
+        self.shader_program = ShaderProgram(
+            vertex=[resource_filename('glx', 'glsl_shaders/text.vert')],
+            geometry=[resource_filename('glx', 'glsl_shaders/text.geom')],
+            fragment=[resource_filename('glx', 'glsl_shaders/text.frag')])
         self.char_to_index = {}
         self.chars = []
         self.atlas = Atlas(self, 256, self.ATLAS_TEXTURE_UNIT)

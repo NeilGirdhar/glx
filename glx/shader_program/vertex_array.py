@@ -1,7 +1,6 @@
 from contextlib import contextmanager
 
-from glx import gl as gl
-
+from ..gl_importer import gl as gl
 from .bound_attribute import BoundAttribute
 
 __all__ = []

@@ -1,7 +1,6 @@
 import networkx as nx
 import numpy as np
 from numpy.testing import assert_allclose
-
 from rectangle import Rect
 
 from ..ortho_projection import OrthoProjection

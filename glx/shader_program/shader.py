@@ -3,7 +3,7 @@ from io import StringIO
 from mako.runtime import Context
 from mako.template import Template
 
-from glx import gl as gl
+from ..gl_importer import gl as gl
 
 __all__ = ['Shader']
 

@@ -2,8 +2,7 @@ from contextlib import contextmanager
 
 import numpy as np
 
-from glx import gl as gl
-
+from ..gl_importer import gl as gl
 from ..tools import next_power_of_two
 
 

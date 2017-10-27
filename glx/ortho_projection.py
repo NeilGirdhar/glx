@@ -1,5 +1,4 @@
 import numpy as np
-
 from rectangle import Rect
 
 from .transformations import clip_matrix

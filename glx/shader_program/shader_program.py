@@ -1,7 +1,6 @@
 from contextlib import contextmanager
 
-from glx import OpenGL, gl
-
+from ..gl_importer import OpenGL, gl
 from ..wrappers import glGetActiveAttrib
 from .shader import Shader
 from .uniform_description import UniformDescription
@@ -23,17 +22,21 @@ class ShaderProgram:
     def __init__(self, vertex=[], geometry=[], fragment=[],
                  context_kwargs=None):
         """
-        context_kwargs are passed to the mako runtime context.
+        * vertex, geometry and fragment are lists of filenames of included
+          shaders.
+        * context_kwargs are passed to the mako runtime context.
         """
         # pylint: disable=assignment-from-no-return
         self.program_index = gl.glCreateProgram()
         assert self.program_index > 0
-        self.shaders = {(name, type_): Shader(name, type_, context_kwargs)
-                        for names, type_ in [
+        self.shaders = {(filename, type_): Shader(filename,
+                                                  type_,
+                                                  context_kwargs)
+                        for filenames, type_ in [
                             (vertex, gl.GL_VERTEX_SHADER),
                             (geometry, gl.GL_GEOMETRY_SHADER),
                             (fragment, gl.GL_FRAGMENT_SHADER)]
-                        for name in names}
+                        for filename in filenames}
         for shader in self.shaders.values():
             gl.glAttachShader(self.program_index,
                               shader.shader_index)

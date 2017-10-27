@@ -2,7 +2,7 @@ import re
 
 import numpy as np
 
-from glx import gl
+from ..gl_importer import gl
 
 __all__ = ['UniformDescription']
 
