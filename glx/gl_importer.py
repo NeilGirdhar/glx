@@ -1,6 +1,7 @@
 # gl should be imported through this file so that the options are set before
 # importing OpenGL.GL.
 import OpenGL
+OpenGL.SIZE_1_ARRAY_UNPACK = False
 # ERROR_CHECKING = True
 # ERROR_LOGGING = False
 # ERROR_ON_COPY = False
@@ -17,8 +18,6 @@ import OpenGL
 # UNSIGNED_BYTE_IMAGES_AS_STRING = True
 # MODULE_ANNOTATIONS = False
 import OpenGL.GL as gl
-
-OpenGL.SIZE_1_ARRAY_UNPACK = False
 
 
 __all__ = ['OpenGL', 'gl']
