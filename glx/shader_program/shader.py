@@ -18,7 +18,7 @@ class Shader:
     def __init__(self, filename, type_, context_kwargs=None):
         self.type_ = type_
 
-        template = Template(filename=f"{filename}.{self.EXTENSION[type_]}")
+        template = Template(filename=filename)
         buffer = StringIO()
         context = Context(buffer, **(context_kwargs
                                      if context_kwargs is not None

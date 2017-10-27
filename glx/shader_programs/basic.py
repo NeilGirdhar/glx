@@ -3,12 +3,9 @@ import numpy as np
 from glx import gl
 
 from ..shader_program import Attribute, BufferDescription, ShaderProgram
-from pkg_resources import resource_string
+from pkg_resources import resource_filename
 
 __all__ = ['BasicShaderProgram']
-
-test = resource_string(__name__, 'glx/glsl_shaders/basic.vert')
-print(test)
 
 
 class BasicShaderProgram(ShaderProgram):
