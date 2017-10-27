@@ -1,4 +1,4 @@
-import OpenGL.GL as gl
+from .gl_importer import gl
 
 __all__ = ['glGetActiveAttrib']
 
