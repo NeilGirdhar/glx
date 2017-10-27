@@ -2,7 +2,7 @@ import numpy as np
 from pkg_resources import resource_filename
 
 from ..shader_program import Attribute, BufferDescription, ShaderProgram
-from .gl_importer import gl
+from ..gl_importer import gl
 
 __all__ = ['BasicShaderProgram']
 

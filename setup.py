@@ -4,16 +4,16 @@ from setuptools import find_packages, setup
 
 setup(
     name = 'glx',
+    version = '0.3.6',
     packages=find_packages(),
     package_data={
         'glx': ['**/*.vert', '**/*.frag', '**/*.geom'],
     },
-    version = '0.3.5',
     description = 'Classes that facilitate working with OpenGL 4.4 shaders and efficiently rendering text.',
     author = 'Neil Girdhar',
     author_email = 'mistersheik@gmail.com',
     url = 'https://github.com/NeilGirdhar/glx',
-    download_url = 'https://github.com/neilgirdhar/glx/archive/0.3.5.tar.gz',
+    download_url = 'https://github.com/neilgirdhar/glx/archive/0.3.6.tar.gz',
     keywords = [],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
