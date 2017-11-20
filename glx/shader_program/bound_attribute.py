@@ -11,13 +11,20 @@ __all__ = []
 class Indexer:
 
     def __init__(self, shape, strides):
+        """
+        Members
+        * shape:
+          The shapes of the indexed dimensions.
+        * strides:
+          The strides in bytes of the indexed dimensions.
+        """
         self.shape = shape
         self.strides = strides
 
     def __repr__(self):
-        return "Indexer(max_index={}, indexed_advance={})".format(
-            self.max_index,
-            self.indexed_advance)
+        return "Indexer(shape={}, strides={})".format(
+            self.shape,
+            self.strides)
 
     def get_offset(self, index):
         return int(np.dot(index, self.strides))
@@ -48,19 +55,27 @@ class BoundAttribute:
         * buffer_dtype:  The type of the numpy array that represents the
           buffer.
 
-        Members:
+        Members relating to calling OpenGL functions:
         * attribute_location:  The location of the attribute in the program
-          returned by glGetAttribLocation
+          returned by glGetAttribLocation.
         * stride:
-          The stride between each vector item in bytes.
+          The byte offset between consecutive “vertex attributes”.
         * offset:
-          The offset into the buffer of the first vector item in bytes.
+          The offset in bytes into the buffer of the first “vertex attribute”.
         * integral:
           Whether the data in the buffer is integral or floating point.
-        * shape:
-          The the number of components in each vector item.  1 <= shape <= 4
         * gl_type:
           The GL type, e.g., GL_FLOAT or GL_INT
+        * vector_size:
+          The number of components per “vertex attribute”. Must be 1, 2, 3,
+          or 4.
+        * array_size:
+          The number of OpenGL attributes represented by this BoundAttribute
+          object.
+        * array_stride:
+          The stride in bytes between each component of the array.
+
+        Members relating to indexing:
         * indexer:
           An instance of Indexer that translates from a sub-array index into
           the numpy array to a byte offset.  It also knows the maximum
@@ -82,41 +97,50 @@ class BoundAttribute:
         # Calculate shape and indexer.
         shape = sub_dtype.shape
         strides = np.zeros((), dtype=sub_dtype).strides
-        if attribute.is_vector:
-            if attribute.is_packed_array:
-                raise ValueError
-            if not (1 <= shape[-1] <= 4):
-                raise ValueError
-            self.vector_size = shape[-1]
-            # The last entry of shape and stride have to do with this vector,
-            # which has now been consumed.
-            shape = shape[:-1]
-            strides = strides[:-1]
-        else:
-            self.vector_size = 1
 
-        if attribute.array_size is None:
-            self.array_size = 1
-            self.array_stride = 0
-            self.packed_array_size = 1
-        elif attribute.array_size <= shape[-1]:
-            self.array_size = attribute.array_size
-            self.array_stride = strides[-1]
-            self.packed_array_size = ((self.array_size + 3) // 4
-                                      if attribute.is_packed_array
-                                      else self.array_size)
-            if attribute.is_packed_array:
-                self.array_stride *= 4
-                self.vector_size = 4
-            # The last entry of shape and stride have to do with this vector,
-            # which has now been consumed.
+        def consume_last_dimension():
+            nonlocal shape
+            nonlocal strides
+            # The last entry of shape and stride have to do with this
+            # vector, which has now been consumed.
             shape = shape[:-1]
             strides = strides[:-1]
+
+        if attribute.is_packed_array:
+            if attribute.is_vector:
+                raise ValueError
+            if shape[-1] > attribute.array_size * 4:
+                raise ValueError(
+                    "Numpy array shape's final component is too big")
+            if attribute.array_size is None:
+                raise ValueError(
+                    "The array_size of a packed array is not specified")
+
+            self.vector_size = 4
+            self.array_size = attribute.array_size
+            self.array_stride = strides[-1] * 4
+            consume_last_dimension()
         else:
-            raise ValueError(
-                f'Attribute array is supposed to have size '
-                f'{attribute.array_size}, '
-                f'but the buffer has dimensions {shape}')
+            if attribute.is_vector:
+                if not (1 <= shape[-1] <= 4):
+                    raise ValueError
+
+                self.vector_size = shape[-1]
+                consume_last_dimension()
+            else:
+                self.vector_size = 1
+
+            if attribute.array_size is None:
+                self.array_size = 1
+                self.array_stride = 0
+            else:
+                if attribute.array_size != shape[-1]:
+                    raise ValueError(
+                        f'Attribute array is supposed to have size '
+                        f'{attribute.array_size}, '
+                        f'but the buffer has dimensions {shape}')
+                self.array_size = attribute.array_size
+                consume_last_dimension()
 
         if shape:  # Any leftover dimensions must be indexed at call time.
             self.indexer = Indexer(shape, strides)
@@ -127,14 +151,9 @@ class BoundAttribute:
         self.gl_type = OpenGL.arrays.numpymodule.ARRAY_TO_GL_TYPE_MAPPING[
             sub_dtype.base]
         self.integral = np.issubdtype(sub_dtype, np.integer)
-#       if self.attribute_name == 'data':
-#           print(self.vector_size, self.array_size,
-#                 self.packed_array_size,
-#                 self.array_stride, sub_dtype,
-#                 buffer_dtype)
 
     def enable_attributes(self):
-        for i in range(self.packed_array_size):
+        for i in range(self.array_size):
             gl.glEnableVertexAttribArray(self.attribute_location + i)
 
     def bind(self, index=None):
@@ -154,9 +173,11 @@ class BoundAttribute:
                 offset += self.indexer.get_offset(index)
             except ValueError:
                 raise IndexError(
-                    f"Bad index {index} on attribute '{self.attribute_name}'.")
-        for attrib_index, this_offset in zip(range(self.packed_array_size),
-                                             count(offset, self.array_stride)):
+                    f"Bad index {index} on attribute '{self.attribute_name}' "
+                    f"that wants {len(self.indexer.strides)} components.")
+        for attrib_index, this_offset in zip(
+                range(self.array_size),
+                count(offset, self.array_stride)):
             pointer = ctypes.c_void_p(this_offset)
             this_attrib_location = self.attribute_location + attrib_index
             if self.integral:
@@ -173,13 +194,16 @@ class BoundAttribute:
                                          self.stride,
                                          pointer)
 
-    def __repr__(self):
-        return ("BufferBoundAttribute("
+    def __str__(self):
+        return ("BoundAttribute("
                 + ", ".join("{}={}".format(x, getattr(self, x))
-                            for x in ['integral',
-                                      'attribute_location',
-                                      'shape',
-                                      'gl_type',
-                                      'stride',
-                                      'offset',
-                                      'indexer']) + ")")
+                            for x in [
+                                    'attribute_location',
+                                    'stride',
+                                    'offset',
+                                    'integral',
+                                    'gl_type',
+                                    'vector_size',
+                                    'array_size',
+                                    'array_stride',
+                                    'indexer']) + ")")
