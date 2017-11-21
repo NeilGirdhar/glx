@@ -109,9 +109,11 @@ class BoundAttribute:
         if attribute.is_packed_array:
             if attribute.is_vector:
                 raise ValueError
-            if shape[-1] > attribute.array_size * 4:
+            if shape[-1] <= (attribute.array_size - 1) * 4:
                 raise ValueError(
-                    "Numpy array shape's final component is too big")
+                    "The attribute's array_size is unnecessarily large given "
+                    "the Numpy array shape's final component "
+                    f"{shape[-1]}.")
             if attribute.array_size is None:
                 raise ValueError(
                     "The array_size of a packed array is not specified")
