@@ -91,7 +91,19 @@ class BoundAttribute:
         self.offset = 0
         sub_dtype = buffer_dtype
         for lookup in attribute.lookup_sequence:
-            sub_dtype, offset_delta = sub_dtype.fields[lookup]
+            if sub_dtype.fields is None:
+                if not isinstance(lookup, int):
+                    raise TypeError
+                strides = np.zeros((), dtype=sub_dtype).strides
+                if lookup > sub_dtype.shape[0]:
+                    raise ValueError
+                offset_delta = lookup * strides[0]
+                sub_dtype = np.dtype((sub_dtype.base, sub_dtype.shape[1:]))
+            else:
+                if not isinstance(lookup, str):
+                    raise TypeError
+                sub_dtype, offset_delta = sub_dtype.fields[lookup]
+
             self.offset += offset_delta
 
         # Calculate shape and indexer.

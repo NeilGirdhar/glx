@@ -3,12 +3,12 @@ from setuptools import find_packages, setup
 
 setup(
     name='glx',
-    version='0.3.8',
+    version='0.4.0',
     description='Classes that facilitate working with OpenGL 4.4 shaders and efficiently rendering text.',
     author='Neil Girdhar',
     author_email='mistersheik@gmail.com',
     url='https://github.com/NeilGirdhar/glx',
-    download_url='https://github.com/neilgirdhar/glx/archive/0.3.8.tar.gz',
+    download_url='https://github.com/neilgirdhar/glx/archive/0.4.0.tar.gz',
     packages=find_packages(),
     package_data={
         'glx': ['**/*.vert', '**/*.frag', '**/*.geom'],
@@ -30,7 +30,7 @@ setup(
                       'rectangle>=0.2',
                       'freetype-py>=1.1',
                       'PyOpenGL>=3.0.0'],
-    python_requires='>=3.4'
+    python_requires='>=3.4',
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
 )

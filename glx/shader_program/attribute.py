@@ -13,8 +13,10 @@ class Attribute:
         """
         * name is the name of the input attribute in the GLSL vertex
           shader code.  It is mainly used for error-reporting.
-        * lookup_sequence is an iterable of names, which constitute a path in
-          the numpy array's dtype that locates the data in the numpy array.
+        * lookup_sequence is an iterable of names or indices, which constitute
+          a path in the numpy array's dtype that locates the data in the numpy
+          array.  Names are used to index into records, and indices are used
+          to lookup into arrays.
         * is_vector is a Boolean that says whether this attribute is a vector,
           e.g., vec4.  Vector attributes have between 2 and 4 components.  The
           final dimension of the numpy array's shape must match the vector
