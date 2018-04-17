@@ -38,24 +38,18 @@ class BoundAttribute:
 
     def __init__(self, attribute, program, buffer_dtype):
         """
-        Let the shape of the buffer_dtype have n dimensions.  Then,
-        m = n - is_vector - (array_size is not None) ≥ 0.  Iff m > 0, this is
-        an indexed attribute.
-        * indexed attributes need to be bound at draw time, e.g.,
-          vertex_array.attributes[attrib_name].bind(index).
-        * program is an instance of ShaderProgram.
-        * non-indexed attributes are bound now, which associates them
-          with the vertex array (so binding the vertex array)
-          automatically binds them.
-
-        The constructor does not make any OpenGL calls.
-
-        Parameters:
-        * attribute: An Attribute object.
+        The constructor accepts:
+        * attribute: An Attribute object that describes the location of some
+          data within a numpy array.
+        * program: An instance of ShaderProgram.
         * buffer_dtype:  The type of the numpy array that represents the
           buffer.
 
-        Members relating to calling OpenGL functions:
+        The constructor calculates the parameters of the OpenGL calls (e.g.,
+        glVertexAttribPointer) that will need to be made when the
+        BoundAttribute is bound.
+
+        The constructor sets members relating to calling OpenGL functions:
         * attribute_location:  The location of the attribute in the program
           returned by glGetAttribLocation.
         * stride:
@@ -75,12 +69,20 @@ class BoundAttribute:
         * array_stride:
           The stride in bytes between each component of the array.
 
-        Members relating to indexing:
+        The constructor also sets members relating to indexing:
         * indexer:
           An instance of Indexer that translates from a sub-array index into
           the numpy array to a byte offset.  It also knows the maximum
           sub-array index for the purpose of assertions.  A sub-array is the
           leftover dimensions in the numpy array that are bound at call time.
+
+        Let the shape of the buffer_dtype have n dimensions.  Then,
+        m = n - is_vector - (array_size is not None) ≥ 0.  Iff m > 0, this is
+        an indexed attribute.
+        * indexed attributes need to be bound at draw time, e.g.,
+          vertex_array.attributes[attrib_name].bind(index).
+        * non-indexed attributes can be bound once to associate them with the
+          vertex array (so binding the vertex array) automatically binds them.
         """
         self.attribute_name = attribute.name
         self.attribute_location = \
@@ -172,14 +174,10 @@ class BoundAttribute:
 
     def bind(self, index=None):
         """
-        index is the index into the dimensions (that are not consumed by
-        is_vertex or array_index) of the vertex buffer (a numpy array).  For
-        example, if the we have an exposed trait called "firing" on a cluster
-        of size n, then index is a number in range(n).  If index is None, that
-        means the exposed trait is a scalar.
-
-        bind's job is to specify the location and data format of the array of
-        vertex attributes.
+        bind makes the OpenGL calls to specify the location and data format of
+        the array of vertex attributes.
+        * index is the index into the dimensions (that are not consumed by
+          is_vertex or array_index) of the vertex buffer (a numpy array).
         """
         offset = self.offset
         if index is not None:
