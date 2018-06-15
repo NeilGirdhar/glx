@@ -183,10 +183,11 @@ class BoundAttribute:
         if index is not None:
             try:
                 offset += self.indexer.get_offset(index)
-            except ValueError:
+            except ValueError as e:
                 raise IndexError(
                     f"Bad index {index} on attribute '{self.attribute_name}' "
-                    f"that wants {len(self.indexer.strides)} components.")
+                    f"that wants {len(self.indexer.strides)} components.") \
+                    from e
         for attrib_index, this_offset in zip(
                 range(self.array_size),
                 count(offset, self.array_stride)):
