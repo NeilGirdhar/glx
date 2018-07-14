@@ -6,22 +6,23 @@ __all__ = ['OrthoView']
 
 
 class OrthoView:
+    """
+    An OrthoView converts between four spaces:
+    * scene
+    * screen (the scene space zoomed)
+    * widget (the screen space translated)
+    * scaled_widget (device_pixel_ratio times smaller than widget)
+    """
 
     def __init__(self, zoom=np.ones(2), scroll=np.zeros(2, dtype='i')):
         """
-        zoom
-        * shape: (2,)
-        * Conversion from scene space to screen space.
-        scroll
-        * shape: (2,)
-        * Conversion from screen space to widget space.
-        * Bottom-right is positive.
-
-        There are three spaces:
-        * scene
-        * screen (the scene space zoomed)
-        * widget (the screen space translated)
-        * scaled_widget (device_pixel_ratio times smaller than widget)
+        * zoom
+          * shape: (2,)
+          * Conversion from scene space to screen space.
+        * scroll
+          * shape: (2,)
+          * Conversion from screen space to widget space.
+          * Bottom-right is positive.
         """
         super().__init__()
         # These variables do the transformation between spaces.

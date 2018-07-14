@@ -4,6 +4,8 @@ import numpy as np
 
 from ..gl_importer import gl as gl
 
+__all__ = ['Atlas']
+
 
 class Atlas:
 

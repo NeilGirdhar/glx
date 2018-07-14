@@ -5,6 +5,8 @@ import numpy as np
 from ..gl_importer import gl as gl
 from ..tools import next_power_of_two
 
+__all__ = ['CodeLookup']
+
 
 class CodeLookup:
 

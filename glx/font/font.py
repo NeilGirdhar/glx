@@ -9,6 +9,8 @@ from ..shader_program import ShaderProgram
 from .atlas import Atlas
 from .code_lookup import CodeLookup
 
+__all__ = ['Font']
+
 
 class Font:
     ATLAS_TEXTURE_UNIT = 0

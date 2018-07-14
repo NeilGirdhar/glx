@@ -4,6 +4,8 @@ import numpy as np
 from ..gl_importer import gl as gl
 from ..shader_program import Attribute, BufferDescription
 
+__all__ = ['DisplayList']
+
 
 class DisplayList:
     RECORD_TYPE = np.dtype([('vertex', '<f4', 2),
