@@ -19,8 +19,8 @@ class Font:
                           + string.digits
                           + string.punctuation
                           + ' ')
-    FT_OPTIONS = (ft.FT_LOAD_RENDER |
-                  ft.FT_LOAD_FORCE_AUTOHINT)
+    FT_OPTIONS = (ft.FT_LOAD_RENDER
+                  | ft.FT_LOAD_FORCE_AUTOHINT)
     # ft.FT_LOAD_TARGET_LCD
 
     def __init__(self, filename, size):

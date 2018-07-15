@@ -3,14 +3,11 @@ import sys
 import moderngl
 import numpy as np
 from PyQt5.QtGui import QSurfaceFormat
-from PyQt5.QtOpenGL import QGLFormat
 from PyQt5.QtWidgets import QApplication, QOpenGLWidget
 from rectangle import Rect
 
 from geometry import Geometry
-from glx import (BoundedOrthoView, DisplayList, Font, OrthoProjection,
-                 Viewport, translation_matrix, gl)
-
+from glx import DisplayList, Font, gl, translation_matrix
 
 background = np.array([0.0, 0.16862745098039217, 0.21176470588235294, 1.0])
 off_white = np.array([0.9333, 0.9098, 0.8353, 1.0])
@@ -37,8 +34,14 @@ class MyWidget(QModernGLWidget):
             self.devicePixelRatio()
         self.text_location = None
 
+        new_scene_rect = Rect([0.0, 0.0],
+                              [10.0, 1.0])
+        self.geometry.set_scene_rect(new_scene_rect)
+
     def initializeGL(self):
         super().initializeGL()
+
+        # Set up font.
         self.font = Font('/Library/Fonts/Arial Unicode.ttf', 24)
         with self.font.shader_program.bind_context():
             self.font.shader_program.color(off_white)
@@ -56,14 +59,11 @@ class MyWidget(QModernGLWidget):
         self.do_resize(width, height)
 
     def do_resize(self, width, height):
-        new_scene_rect = Rect([0.0, 0.0],
-                              [10.0, 1.0])
         self.geometry.set_widget_size([width, height])
-        self.geometry.set_scene_rect(new_scene_rect)
         self.geometry.apply_projection_matrix([self.font.shader_program])
         self.text_location = np.array(
-            [(0.9 * self.geometry.scene_visible_rect.mins[0] +
-              0.1 * self.geometry.scene_visible_rect.maxes[0]),
+            [(0.9 * self.geometry.scene_visible_rect.mins[0]
+              + 0.1 * self.geometry.scene_visible_rect.maxes[0]),
              0.1,
              0,
              1])
@@ -76,10 +76,13 @@ class MyWidget(QModernGLWidget):
         # Set up blending.
         gl.glBlendEquationi(self.defaultFramebufferObject(), gl.GL_FUNC_ADD)
         gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
-
         gl.glEnable(gl.GL_BLEND)
+
+        # Get matrices.
         view_matrix = self.geometry.view_matrix
         model_matrix = translation_matrix([0.0, 0.0, 0.0]).astype('f')
+
+        # Paint the text.
         with self.font.draw_context():
             location = view_matrix.dot(model_matrix.dot(
                 self.text_location))

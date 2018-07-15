@@ -23,7 +23,6 @@ class Geometry:
             projection=OrthoProjection(),
             view=ortho_view)
 
-
     # Member variable updating ------------------------------------------------
     @property
     def scene_visible_rect(self):

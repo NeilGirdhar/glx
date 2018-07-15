@@ -210,13 +210,12 @@ class BoundAttribute:
     def __str__(self):
         return ("BoundAttribute("
                 + ", ".join("{}={}".format(x, getattr(self, x))
-                            for x in [
-                                    'attribute_location',
-                                    'stride',
-                                    'offset',
-                                    'integral',
-                                    'gl_type',
-                                    'vector_size',
-                                    'array_size',
-                                    'array_stride',
-                                    'indexer']) + ")")
+                            for x in ['attribute_location',
+                                      'stride',
+                                      'offset',
+                                      'integral',
+                                      'gl_type',
+                                      'vector_size',
+                                      'array_size',
+                                      'array_stride',
+                                      'indexer']) + ")")

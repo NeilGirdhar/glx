@@ -21,4 +21,3 @@ import OpenGL.GL as gl
 
 
 __all__ = ['OpenGL', 'gl']
-

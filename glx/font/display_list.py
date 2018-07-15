@@ -38,8 +38,8 @@ class DisplayList:
         if not isinstance(text, str):
             raise TypeError("text argument must be a string — not {}".format(
                 type(text)))
-        if (text == self.text and
-                self.atlas_creation_id == self.font.atlas.creation_id):
+        if (text == self.text
+                and self.atlas_creation_id == self.font.atlas.creation_id):
             return
         self.text = text
         self.regenerate()

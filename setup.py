@@ -4,7 +4,8 @@ from setuptools import find_packages, setup
 setup(
     name='glx',
     version='0.4.0',
-    description='Classes that facilitate working with OpenGL 4.4 shaders and efficiently rendering text.',
+    description=('Classes that facilitate working with OpenGL 4.4 shaders '
+                 'and efficiently rendering text.'),
     author='Neil Girdhar',
     author_email='mistersheik@gmail.com',
     url='https://github.com/NeilGirdhar/glx',
