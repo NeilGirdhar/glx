@@ -6,24 +6,22 @@ __all__ = ['Viewport']
 
 
 class Viewport:
+    """
+    A Viewport maps “points” in the unit square to widget or scene
+    coördinates.  To do that it needs a projection, which maps between
+    OpenGL and widget coördinates; and a view, which maps between widget
+    and scene coördinates.
 
-    def __init__(self,
-                 location=Rect(sizes=[1, 1]),
-                 projection=None,
-                 view=None):
-        """
-        A Viewport maps converts “points” in the unit square to widget or scene
-        coördinates.  To do that it needs a projection, which maps between
-        OpenGL and widget coördinates; and a view, which maps between widget
-        and scene coördinates.
+    A viewport has an optional location, which is a subregion of the unit
+    square to which the viewport corresponds.
+    """
 
-        A viewport has an optional location, which is a subregion of the unit
-        square to which the viewport corresponds.
-        """
-        self.location = location
+    def __init__(self, projection, view, location=Rect(sizes=[1, 1])):
         self.projection = projection
         self.view = view
+        self.location = location
 
+    # New methods -------------------------------------------------------------
     def point_to_gl(self, point):
         retval = (((point[:2] - self.location.mins) * 2 / self.location.sizes)
                   - 1)
@@ -37,6 +35,14 @@ class Viewport:
     def point_to_scene(self, point):
         return self.view.widget_to_scene.dot(self.point_to_widget(point))
 
+    def scene_visible_rect(self):
+        """
+        The widget rectangle mapped to scene space.
+        """
+        return self.projection.widget_rect.transformed(
+            self.view.widget_to_scene).rectified()
+
+    # Static methods ----------------------------------------------------------
     @staticmethod
     def viewports_point_to_scene(viewports, point):
         """
@@ -51,6 +57,7 @@ class Viewport:
                 return viewport, viewport.point_to_scene(point)
         return None, None
 
+    # Magic methods -----------------------------------------------------------
     def __repr__(self):
         return (f"{type(self).__name__}(location={self.location}, "
                 f"projection={self.projection}, "

@@ -7,16 +7,17 @@ __all__ = ['OrthoProjection']
 
 
 class OrthoProjection:
+    """
+    A projection coverts between two spaces:
+    * widget (determined externally by the widget_rect)
+    * gl (the gl coördinates, which range from -1 to 1 on each axis)
+    """
 
     def __init__(self, widget_rect=Rect(sizes=[1, 1])):
         """
         widget_rect
         * shape: (2,)
         * in screen coordinates
-
-        There are two spaces:
-        * widget (determined externally by the widget_rect)
-        * gl (the gl coördinates, which range from -1 to 1 on each axis)
         """
         self.widget_rect = widget_rect
 

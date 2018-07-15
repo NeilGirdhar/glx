@@ -89,7 +89,6 @@ class BoundedOrthoView(OrthoView):
     def widget_size(self, new_widget_size):
         self.widget_size_ = new_widget_size
         self.scroll = self.scroll  # Clamp the scroll.
-        self.widget_resized_signal.emit(new_widget_size)
 
     # Rectangle properties ----------------------------------------------------
     @property
@@ -102,14 +101,6 @@ class BoundedOrthoView(OrthoView):
         return Rect(self.screen_rect.mins,
                     self.screen_rect.maxes - self.widget_size)
 
-    def scene_visible_rect(self, widget_rect):
-        """
-        The scene visible rect is a rectangle in scene space that surrounds
-        what you can see in gl space given a projection matrix.
-        The projection matrix maps widget space to gl space.
-        """
-        return widget_rect.transformed(self.widget_to_scene).rectified()
-
     # Value updaters ----------------------------------------------------------
     def hold_and_set_scene_rect(self,
                                 widget_hold_point,
@@ -119,14 +110,21 @@ class BoundedOrthoView(OrthoView):
 
     @contextmanager
     def hold_position(self, widget_hold_point):
+        """
+        Scrolls the scene to make a point (in widget space) map to the same
+        scene space.  This keeps the spot under the pointer from moving when
+        the zoom command is being issued with the mouse.
+        """
         def scene_hold_point(widget_hold_point):
             if widget_hold_point is None:
                 return np.zeros(4)
             return self.widget_to_scene.dot(widget_hold_point)
         shp = scene_hold_point(widget_hold_point)
-        yield
-        delta_shp = (shp - scene_hold_point(widget_hold_point))[:2]
-        self.scroll += (delta_shp * self.flipped_zoom).astype(np.int32)
+        try:
+            yield
+        finally:
+            delta_shp = (shp - scene_hold_point(widget_hold_point))[:2]
+            self.scroll += (delta_shp * self.flipped_zoom).astype(np.int32)
 
     def __repr__(self):
         return (f"{type(self).__name__}("

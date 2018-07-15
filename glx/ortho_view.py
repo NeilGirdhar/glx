@@ -9,9 +9,11 @@ class OrthoView:
     """
     An OrthoView converts between four spaces:
     * scene
-    * screen (the scene space zoomed)
-    * widget (the screen space translated)
-    * scaled_widget (device_pixel_ratio times smaller than widget)
+    * screen (the scene space zoomed so that one unit is one pixel)
+    * widget (the screen space translated so that the origin is in the
+      top-left)
+    * scaled_widget (device_pixel_ratio times smaller than widget), which
+      accounts for a scaling trick on retina screens in OS X.
     """
 
     def __init__(self, zoom=np.ones(2), scroll=np.zeros(2, dtype='i')):
