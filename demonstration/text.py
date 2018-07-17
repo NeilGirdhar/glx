@@ -1,6 +1,5 @@
 import sys
 
-import moderngl
 import numpy as np
 from PyQt5.QtGui import QSurfaceFormat
 from PyQt5.QtWidgets import QApplication, QOpenGLWidget
@@ -13,19 +12,7 @@ background = np.array([0.0, 0.16862745098039217, 0.21176470588235294, 1.0])
 off_white = np.array([0.9333, 0.9098, 0.8353, 1.0])
 
 
-class QModernGLWidget(QOpenGLWidget):
-    def __init__(self):
-        super().__init__()
-
-        self.context = None
-        self.screen = None
-
-    def initializeGL(self):
-        super().initializeGL()
-        self.context = moderngl.create_context()
-
-
-class MyWidget(QModernGLWidget):
+class MyWidget(QOpenGLWidget):
 
     def __init__(self):
         self.geometry = Geometry()
@@ -69,31 +56,25 @@ class MyWidget(QModernGLWidget):
 
     def paintGL(self):
         framebuffer = self.defaultFramebufferObject()
-        mgl_framebuffer = self.context.detect_framebuffer(
-            self.defaultFramebufferObject())
 
         # Clear the buffer.
-        mgl_framebuffer.clear(*background)
+        gl.glClearColor(*background)
+        gl.glClear(gl.GL_COLOR_BUFFER_BIT)
 
-        with self.context.scope(
-                framebuffer=mgl_framebuffer,
-                enable_only=moderngl.BLEND):
-            pass
+        # Set up blending.
+        gl.glBlendEquationi(framebuffer, gl.GL_FUNC_ADD)
+        gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
+        gl.glEnable(gl.GL_BLEND)
 
-            # Set up blending.
-            gl.glBlendEquationi(framebuffer, gl.GL_FUNC_ADD)
-            gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
-            gl.glEnable(gl.GL_BLEND)
+        # Get matrices.
+        view_matrix = self.geometry.view_matrix
+        model_matrix = translation_matrix([0.0, 0.0, 0.0]).astype('f')
 
-            # Get matrices.
-            view_matrix = self.geometry.view_matrix
-            model_matrix = translation_matrix([0.0, 0.0, 0.0]).astype('f')
-
-            # Paint the text.
-            with self.font.draw_context():
-                location = view_matrix.dot(model_matrix.dot(
-                    self.text_location))
-                self.text_display_list.draw(location)
+        # Paint the text.
+        with self.font.draw_context():
+            location = view_matrix.dot(model_matrix.dot(
+                self.text_location))
+            self.text_display_list.draw(location)
 
 
 if __name__ == '__main__':

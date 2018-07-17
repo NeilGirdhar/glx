@@ -10,7 +10,7 @@ class BufferDescription:
         * buffer_index is a buffer object index (as returned by glGenBuffers).
         * buffer_dtype is the dtype of the numpy array that will be loaded
           into the buffer.
-        * attributes is a reiterable of BufferBoundAttribute objects.
+        * attributes is a reiterable of BoundAttribute objects.
         """
         if not isinstance(buffer_index, np.uint32):
             raise TypeError

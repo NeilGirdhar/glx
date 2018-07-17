@@ -1,6 +1,6 @@
 import numpy as np
 
-from .transformations import translation_matrix
+from ..transformations import translation_matrix
 
 __all__ = ['OrthoView']
 

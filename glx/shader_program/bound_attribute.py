@@ -33,7 +33,7 @@ class Indexer:
 class BoundAttribute:
 
     """
-    A BufferBoundAttribute knows how to bind a single attribute in a shader.
+    A BoundAttribute knows how to bind a single attribute in a shader.
     """
 
     def __init__(self, attribute, program, buffer_dtype):

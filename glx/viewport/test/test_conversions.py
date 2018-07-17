@@ -5,7 +5,7 @@ from rectangle import Rect
 
 from ..ortho_projection import OrthoProjection
 from ..ortho_view import OrthoView
-from ..transformations import four_components
+from ...transformations import four_components
 
 
 def all_paths(g):
