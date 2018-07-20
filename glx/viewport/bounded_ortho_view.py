@@ -80,7 +80,6 @@ class BoundedOrthoView(OrthoView):
     def scene_rect(self, new_scene_rect):
         self.scene_rect_ = new_scene_rect
 
-    # Vector properties -------------------------------------------------------
     @property
     def widget_size(self):
         return self.widget_size_
