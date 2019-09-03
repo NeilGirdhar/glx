@@ -3,13 +3,16 @@ from setuptools import find_packages, setup
 
 setup(
     name='glx',
-    version='0.5.0',
+    version='0.6',
     description=('Classes that facilitate working with OpenGL 4.4 shaders '
                  'and efficiently rendering text.'),
     author='Neil Girdhar',
     author_email='mistersheik@gmail.com',
-    url='https://github.com/NeilGirdhar/glx',
-    download_url='https://github.com/neilgirdhar/glx/archive/0.5.0.tar.gz',
+    project_urls={
+        "Bug Tracker": "https://github.com/NeilGirdhar/glx/issues",
+        "Source Code": "https://github.com/NeilGirdhar/glx",
+    },
+    download_url="https://pypi.python.org/pypi/glx",
     packages=find_packages(),
     package_data={
         'glx': ['**/*.vert', '**/*.frag', '**/*.geom'],
@@ -31,7 +34,7 @@ setup(
                       'rectangle>=0.2',
                       'freetype-py>=1.1',
                       'PyOpenGL>=3.0.0'],
-    python_requires='>=3.4',
+    python_requires='>=3.7',
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
 )

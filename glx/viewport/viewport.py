@@ -1,7 +1,3 @@
-from rectangle import Rect
-
-from ..transformations import four_components
-
 __all__ = ['Viewport']
 
 
